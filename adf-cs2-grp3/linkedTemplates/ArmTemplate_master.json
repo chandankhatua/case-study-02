@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LinkedServiceAzureBlobStorage'"
 		},
+		"LinkedServiceAzureDatabricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1005-053853-tj9rkb84"
+		},
+		"LinkedServiceAzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kv-cs2-grp3-v2.vault.azure.net/"
+		},
 		"LinkedServiceHttpServer_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://raw.githubusercontent.com/manojkumarsingh77/Shell2023/main/EVCarbonEmission/DataSets/CO2%20Emissions_Canada.csv"
@@ -45,8 +53,14 @@
 					"LinkedServiceAzureBlobStorage_connectionString": {
 						"value": "[parameters('LinkedServiceAzureBlobStorage_connectionString')]"
 					},
+					"LinkedServiceAzureKeyVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('LinkedServiceAzureKeyVault_properties_typeProperties_baseUrl')]"
+					},
 					"LinkedServiceHttpServer_properties_typeProperties_url": {
 						"value": "[parameters('LinkedServiceHttpServer_properties_typeProperties_url')]"
+					},
+					"LinkedServiceAzureDatabricks_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('LinkedServiceAzureDatabricks_properties_typeProperties_existingClusterId')]"
 					}
 				}
 			},

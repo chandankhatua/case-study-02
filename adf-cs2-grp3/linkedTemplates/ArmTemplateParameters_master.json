@@ -8,6 +8,12 @@
 		"LinkedServiceAzureBlobStorage_connectionString": {
 			"value": ""
 		},
+		"LinkedServiceAzureDatabricks_properties_typeProperties_existingClusterId": {
+			"value": "1005-053853-tj9rkb84"
+		},
+		"LinkedServiceAzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://kv-cs2-grp3-v2.vault.azure.net/"
+		},
 		"LinkedServiceHttpServer_properties_typeProperties_url": {
 			"value": "https://raw.githubusercontent.com/manojkumarsingh77/Shell2023/main/EVCarbonEmission/DataSets/CO2%20Emissions_Canada.csv"
 		},

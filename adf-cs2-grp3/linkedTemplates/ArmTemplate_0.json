@@ -11,9 +11,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LinkedServiceAzureBlobStorage'"
 		},
+		"LinkedServiceAzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kv-cs2-grp3-v2.vault.azure.net/"
+		},
 		"LinkedServiceHttpServer_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://raw.githubusercontent.com/manojkumarsingh77/Shell2023/main/EVCarbonEmission/DataSets/CO2%20Emissions_Canada.csv"
+		},
+		"LinkedServiceAzureDatabricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1005-053853-tj9rkb84"
 		}
 	},
 	"variables": {
@@ -29,6 +37,19 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('LinkedServiceAzureBlobStorage_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkedServiceAzureKeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('LinkedServiceAzureKeyVault_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -103,6 +124,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/LinkedServiceAzureDatabricks')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7805122889453110.10.azuredatabricks.net",
+					"accessToken": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LinkedServiceAzureKeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "databrickstoken"
+					},
+					"existingClusterId": "[parameters('LinkedServiceAzureDatabricks_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkedServiceAzureKeyVault')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CopyDataPL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -110,7 +155,7 @@
 				"description": "Copying data from github to storage account.",
 				"activities": [
 					{
-						"name": "Github-Raw_Container",
+						"name": "Github to raw container",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -167,6 +212,60 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "raw to staging",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Github to raw container",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/shellunext_1693422142859@npunext.onmicrosoft.com/raw_to_staging"
+						},
+						"linkedServiceName": {
+							"referenceName": "LinkedServiceAzureDatabricks",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "stating to curated",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "raw to staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/shellunext_1693422142859@npunext.onmicrosoft.com/staging_to_curated"
+						},
+						"linkedServiceName": {
+							"referenceName": "LinkedServiceAzureDatabricks",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"policy": {
@@ -177,7 +276,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/InputDataset')]",
-				"[concat(variables('factoryId'), '/datasets/RawDataset')]"
+				"[concat(variables('factoryId'), '/datasets/RawDataset')]",
+				"[concat(variables('factoryId'), '/linkedServices/LinkedServiceAzureDatabricks')]"
 			]
 		}
 	]
