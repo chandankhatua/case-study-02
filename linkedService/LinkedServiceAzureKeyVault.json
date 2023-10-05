@@ -1,0 +1,10 @@
+{
+	"name": "LinkedServiceAzureKeyVault",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://kv-cs2-grp3-v2.vault.azure.net/"
+		}
+	}
+}
