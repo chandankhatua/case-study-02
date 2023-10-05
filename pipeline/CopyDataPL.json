@@ -4,7 +4,7 @@
 		"description": "Copying data from github to storage account.",
 		"activities": [
 			{
-				"name": "Github-Raw_Container",
+				"name": "Github to raw container",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -65,7 +65,7 @@
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "Github-Raw_Container",
+						"activity": "Github to raw container",
 						"dependencyConditions": [
 							"Succeeded"
 						]
