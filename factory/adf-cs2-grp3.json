@@ -1,0 +1,9 @@
+{
+	"name": "adf-cs2-grp3",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0d62f834-630c-438b-a0e7-043fa78b020f",
+		"tenantId": "dce87315-8ffa-4a01-ab40-0de5a7214b2f"
+	}
+}
