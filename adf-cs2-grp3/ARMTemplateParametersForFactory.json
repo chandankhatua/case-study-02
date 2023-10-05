@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-cs2-grp3"
+		},
+		"LinkedServiceAzureBlobStorage_connectionString": {
+			"value": ""
+		},
+		"LinkedServiceHttpServer_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/manojkumarsingh77/Shell2023/main/EVCarbonEmission/DataSets/CO2%20Emissions_Canada.csv"
+		}
+	}
+}
