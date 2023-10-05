@@ -59,6 +59,60 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "raw to staging",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Github-Raw_Container",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/shellunext_1693422142859@npunext.onmicrosoft.com/raw_to_staging"
+				},
+				"linkedServiceName": {
+					"referenceName": "LinkedServiceAzureDatabricks",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "stating to curated",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "raw to staging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/shellunext_1693422142859@npunext.onmicrosoft.com/staging_to_curated"
+				},
+				"linkedServiceName": {
+					"referenceName": "LinkedServiceAzureDatabricks",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"annotations": [],
